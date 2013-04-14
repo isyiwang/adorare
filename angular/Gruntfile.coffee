@@ -31,8 +31,12 @@ module.exports = (grunt) ->
         files: ["<%= yeoman.app %>/styles/{,*/}*.{scss,sass}"]
         tasks: ["compass"]
 
+      jade:
+        files: ["<%= yeoman.app %>/index.jade", "<%= yeoman.app %>/views/*.jade"]
+        tasks: ["jade:development"]
+        
       livereload:
-        files: ["<%= yeoman.app %>/{,*/}*.html", "{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css", "{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js", "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}"]
+        files: [".tmp/{,*/}*.html", "{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css", "{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js", "<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}"]
         tasks: ["livereload"]
 
     connect:
@@ -116,7 +120,19 @@ module.exports = (grunt) ->
         options:
           debugInfo: true
 
-    
+    jade:
+      development:
+        options:
+          pretty: true
+          data:
+            debug: true
+        files: [
+          expand: true
+          cwd: "<%= yeoman.app %>"
+          src: ["**/*.jade"]
+          dest: ".tmp"
+          ext: ".html"
+        ] 
 
     concat:
       dist:
@@ -124,7 +140,7 @@ module.exports = (grunt) ->
           "<%= yeoman.dist %>/scripts/scripts.js": [".tmp/scripts/{,*/}*.js", "<%= yeoman.app %>/scripts/{,*/}*.js"]
 
     useminPrepare:
-      html: "<%= yeoman.app %>/index.html"
+      html: ".tmp/index.html"
       options:
         dest: "<%= yeoman.dist %>"
 
@@ -163,8 +179,8 @@ module.exports = (grunt) ->
         #          removeOptionalTags: true
         files: [
           expand: true
-          cwd: "<%= yeoman.app %>"
-          src: ["*.html", "views/*.html"]
+          cwd: ".tmp"
+          src: ["*.html", "views/*.html", ".tmp/*.html", ".tmp/views/*.html"]
           dest: "<%= yeoman.dist %>"
         ]
 
@@ -201,9 +217,45 @@ module.exports = (grunt) ->
           src: ["*.{ico,txt}", ".htaccess", "components/**/*", "images/{,*/}*.{gif,webp}"]
         ]
 
+  # Load dependencies
   grunt.loadNpmTasks "grunt-connect-proxy"
+  grunt.loadNpmTasks 'grunt-contrib-jade'
+    
   grunt.renameTask "regarde", "watch"
-  grunt.registerTask "server", ["clean:server", "coffee:dist", "compass:server", "configureProxies", "livereload-start", "connect:livereload", "open", "watch"]
+
+  grunt.registerTask "server",
+    [
+      "clean:server",
+      "coffee:dist",
+      "compass:server",
+      "jade",
+      "configureProxies",
+      "livereload-start",
+      "connect:livereload",
+      "open",
+      "watch"
+    ]
+    
   grunt.registerTask "test", ["clean:server", "coffee", "compass", "connect:test", "karma"]
-  grunt.registerTask "build", ["clean:dist", "jshint", "test", "coffee", "compass:dist", "useminPrepare", "imagemin", "cssmin", "htmlmin", "concat", "copy", "cdnify", "ngmin", "uglify", "rev", "usemin"]
+
+  grunt.registerTask "build",
+    [
+      "clean:dist",
+      "jshint",
+      "test",
+      "coffee",
+      "compass:dist",
+      "jade",
+      "useminPrepare",
+      "imagemin",
+      "cssmin",
+      "htmlmin",
+      "concat",
+      "copy",
+      "cdnify",
+      "ngmin",
+      "uglify",
+      "rev",
+      "usemin"
+    ]
   grunt.registerTask "default", ["build"]
