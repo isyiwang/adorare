@@ -1,0 +1,1 @@
+"use strict";angular.module("angularApp",[]).config(["$routeProvider",function(r){r.when("/",{templateUrl:"views/main.html",controller:"MainCtrl"}).otherwise({redirectTo:"/"})}]),angular.module("angularApp").controller("MainCtrl",["$scope",function(r){r.awesomeThings=["HTML5 Boilerplate","AngularJS","Karma"]}]);
