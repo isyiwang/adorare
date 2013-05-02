@@ -16,7 +16,7 @@ html.no-js
     meta(name='viewport', content='width=device-width')
     // Place favicon.ico and apple-touch-icon.png in the root directory
     link(rel='stylesheet', href='styles/main.css')
-  body(ng-app='angularApp')
+  body(ng-app='adorare')
     //if lt IE 7
       p.chromeframe
         | You are using an outdated browser.
@@ -27,8 +27,19 @@ html.no-js
     //if lt IE 9
       script(src='components/es5-shim/es5-shim.js')
       script(src='components/json3/lib/json3.min.js')
+
     // Add your site or application content here
-    .container(ng-view='ng-view')
+    .sidebar
+    .container
+      .navbar
+        .navbar-inner
+          .brand adorare
+          ul.nav
+            li
+              a(href="songs") Songs
+            li
+              a(href="add_song") Add
+      div(ng-view='ng-view')
 
     // build:js scripts/vendor.js
     script(src='components/angular/angular.js')
@@ -41,7 +52,7 @@ html.no-js
 
     // build:js scripts/scripts.js
     script(src='scripts/app.js')
-    script(src='scripts/controllers/main.js')
+    script(src='scripts/controllers.js')
     // endbuild
 
     // Google Analytics: change UA-XXXXX-X to be your site's ID.

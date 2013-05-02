@@ -1,1 +1,15 @@
 @import "bootstrap-sass/lib/bootstrap";
+
+.edit-panes {
+  width: 100%;
+  clear: both;
+  
+  #markup, #preview {
+    width: 49%;
+    display: inline-block;
+  }
+
+  #preview {
+    float: right;
+  }
+}
