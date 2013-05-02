@@ -9,6 +9,8 @@ module.exports = (grunt) ->
   # load all grunt tasks
   require("matchdep").filterDev("grunt-*").forEach grunt.loadNpmTasks
 
+  modRewrite = require('connect-modrewrite')
+
   # configurable paths
   yeomanConfig =
     app: "app"
@@ -55,7 +57,15 @@ module.exports = (grunt) ->
       livereload:
         options:
           middleware: (connect) ->
-            [proxySnippet, lrSnippet, mountFolder(connect, ".tmp"), mountFolder(connect, yeomanConfig.app)]
+            [
+              modRewrite([
+                '!\\.html|\\.js|\\.css|\\.swf|\\.jp(e?)g|\\.png|\\.gif$ /index.html'
+              ]),
+              proxySnippet,
+              lrSnippet,
+              mountFolder(connect, ".tmp"),
+              mountFolder(connect, yeomanConfig.app)
+            ]
 
       test:
         options:
@@ -205,7 +215,7 @@ module.exports = (grunt) ->
     rev:
       dist:
         files:
-          src: ["<%= yeoman.dist %>/scripts/{,*/}*.js", "<%= yeoman.dist %>/styles/{,*/}*.css", "<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}", "<%= yeoman.dist %>/styles/fonts/*"]
+          src: ["<%= yeoman.dist %>/scripts/{,*/}*.js", "<%= yeoman.dist %>/styles/{,*/}*.css", "<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}", "<%= yeoman.dist %>/styles/fonts/*"]
 
     copy:
       dist:
@@ -214,7 +224,7 @@ module.exports = (grunt) ->
           dot: true
           cwd: "<%= yeoman.app %>"
           dest: "<%= yeoman.dist %>"
-          src: ["*.{ico,txt}", ".htaccess", "components/**/*", "images/{,*/}*.{gif,webp}"]
+          src: ["*.{ico,txt}", ".htaccess", "components/**/*", "images/{,*/}*.{gif,webp}",'styles/fonts/*']
         ]
 
   # Load dependencies
